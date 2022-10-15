@@ -1,24 +1,21 @@
 #include "LibraryBook.h"
+#include "Reader.h"
 
 
 
-
-void LibraryBook::add_reader()
+void LibraryBook::add_reader(const Reader &a)
 {
-	std::string firstname, lastname;
-	std::cout << "Enter Reader's first name: ";
-	std::cin >> firstname;
-	std::cout << "Enter Reader's last name: ";
-	std::cin >> lastname;
-	Reader* newreader;
-	newreader = new Reader(firstname, lastname);
-	this->list.push_back(*newreader);
+	this->list.push_back(a);
 	avilable_book_count--;
 }
 
-void LibraryBook::remove_reader()
+void LibraryBook::remove_reader(std::string name)
 {
-	//this->list->delete_reader();
+	auto result = remove_if(list.begin(), list.end(), [name](const Reader& a)
+		{
+			return a.last_name == name;
+		});
+	list.erase(result, list.end());
 	avilable_book_count++;
 }
 
@@ -36,13 +33,16 @@ void LibraryBook::print_fullinfo()
 	std::cout << "Avilable books count : " << avilable_book_count << std::endl;
 	std::cout << "===============================================" << std::endl;
 	std::cout << "Readers list: " << std::endl;
-	//this->list.print();
+	for (auto iter = list.begin(); iter != list.end(); iter++)
+	{
+		iter->print_fullinfo();
+	}
 	std::cout << "===============================================" << std::endl;
 }
 
 LibraryBook::LibraryBook()
 {
-	//list = new List<Reader>;
+	std::list<Reader>;
 	book_id = 0;
 	total_count = 0;
 	avilable_book_count = 0;

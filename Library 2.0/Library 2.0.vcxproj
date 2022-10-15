@@ -128,12 +128,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Book.cpp" />
+    <ClCompile Include="date.cpp" />
     <ClCompile Include="LibraryBook.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Reader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Book.h" />
+    <ClInclude Include="date.h" />
     <ClInclude Include="LibraryBook.h" />
     <ClInclude Include="Reader.h" />
   </ItemGroup>

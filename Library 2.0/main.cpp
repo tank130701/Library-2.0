@@ -7,6 +7,7 @@
 #include "LibraryBook.h"
 #include <string>
 #include "Reader.h"
+#include <sstream>
 
 class Library
 {
@@ -19,6 +20,12 @@ public:
 	void print_books();
 	void print_library_books();
 	void find_book_by_name();
+	void remove_book_from_library();
+	void find_book_by_id();
+	void find_books_by_author();
+	void add_reader();
+	void remove_reader();
+	void check_readers();
 };
 
 int menu() {
@@ -26,14 +33,14 @@ int menu() {
 		"2. Delete Book\n"
 		"3. Append book to catalog\n"
 		"4. Remove book from catalog\n"
-		"5. Print info about book by id\n"
-		"6. Print Books list\n"
-		"7. Print Library Books list\n"
-		"8. Add reader to Library book\n"
-		"9. Remove reader from library book\n"
-		"10. Search by Book id\n"
-		"11. Search by Book name\n"
-		"12. Search by Book author\n"
+		"5. Print Books list\n"
+		"6. Print Library Books list\n"
+		"7. Add reader to Library book\n"
+		"8. Remove reader from library book\n"
+		"9. Search by Book id\n"
+		"10. Search by Book name\n"
+		"11. Search by Book author\n"
+		"12. Check readers\n"
 		"0. Exit " << std::endl;
 	int cmd;
 	std::cout << "~$ ";
@@ -69,15 +76,29 @@ void Library::remove_book()
 	std::string name;
 	std::cout << "Enter the title of book which you want to delete: ";
 	std::cin >> name;
-	/*for (auto iter = list.begin(); iter != list.end(); iter++)
-	{
-		if (iter->name == name)
+	auto result = remove_if(list.begin(), list.end(), [name](const Book& a)
 		{
-			auto iter_d = iter;
-			list.erase(iter_d);
-		}
-	}*/
+			return a.name == name;
+		});
+	list.erase(result, list.end());
 	
+}
+
+void Library::remove_book_from_library()
+{
+	for (auto iter = list1.begin(); iter != list1.end(); iter++)
+	{
+		iter->print_name();
+	}
+	std::string name;
+	std::cout << "Enter the title of book which you want to delete: ";
+	std::cin >> name;
+	auto result = remove_if(list1.begin(), list1.end(), [name](const LibraryBook& a)
+		{
+			return a.name == name;
+		});
+	list1.erase(result, list1.end());
+
 }
 
 void Library::add_book_to_library()
@@ -107,7 +128,7 @@ void Library::find_book_by_name()
 	std::string name;
 	std::cout << "Enter the name of book: ";
 	std::cin >> name;
-	for (auto iter = list.begin(); iter != list.end(); iter++)
+	for (auto iter = list1.begin(); iter != list1.end(); iter++)
 	{
 		if (iter->name == name)
 			iter->print_fullinfo();
@@ -117,6 +138,130 @@ void Library::find_book_by_name()
 		
 }
 
+void Library::find_book_by_id()
+{
+	int id;
+	std::cout << "Enter the id of book: ";
+	std::cin >> id;
+	for (auto iter = list1.begin(); iter != list1.end(); iter++)
+	{
+		if (iter->book_id == id)
+			iter->print_fullinfo();
+		else
+			std::cout << "Book with this id not found.\n";
+	}
+
+}
+
+void Library::find_books_by_author()
+{
+	std::string author;
+	std::cout << "Enter the author of book: ";
+	std::cin >> author;
+	std::list<LibraryBook> check;
+	for (auto iter = list1.begin(); iter != list1.end(); iter++)
+	{
+		if (iter->author == author)
+			check.push_back(*iter);
+		else
+			std::cout << "Books from this author not found.\n";
+	}
+	for (auto iter = check.begin(); iter != check.end(); iter++)
+	{
+		iter->print_fullinfo();
+	}
+}
+
+void Library::add_reader()
+{
+	for (auto iter = list1.begin(); iter != list1.end(); iter++)
+	{
+		iter->print_name();
+	}
+	std::string name;
+	std::cout << "Enter the name of book: ";
+	std::cin >> name;
+	std::string firstname, lastname;
+	std::cout << "Enter Reader's first name: ";
+	std::cin >> firstname;
+	std::cout << "Enter Reader's last name: ";
+	std::cin >> lastname;
+	Reader* newreader;
+	std::string str;
+	std::cout << "Enter current date: ";
+	std::getline(std::cin, str);
+	std::getline(std::cin, str);
+	std::stringstream ss;
+	int dd, mm, yy;
+	ss << str;
+	ss >> dd;
+	ss.seekg(3);
+	ss >> mm;
+	ss.seekg(6);
+	ss >> yy;
+	date data = date(dd, mm, yy);
+	newreader = new Reader(firstname, lastname, data);
+	
+	for (auto iter = list1.begin(); iter != list1.end(); iter++)
+	{
+		if (iter->name == name)
+			iter->add_reader(*newreader);
+		else
+			std::cout << "Book with this name not found.\n";
+	}
+
+}
+
+void Library::remove_reader()
+{
+	std::string lastname;
+	std::cout << "Enter Reader's last name of reader which you want to remove: ";
+	std::cin >> lastname;
+	std::string name;
+	std::cout << "Enter the name of book where you want to delete reader: ";
+	std::cin >> name;
+	for (auto iter = list1.begin(); iter != list1.end(); iter++)
+	{
+		iter->print_name();
+	}
+	for (auto iter = list1.begin(); iter != list1.end(); iter++)
+	{
+		if (iter->name == name)
+			iter->remove_reader(lastname);
+		else
+			std::cout << "Book with this name not found.\n";
+	}
+
+}
+
+void Library::check_readers()
+{
+	std::string str;
+	std::cout << "Enter current date: ";
+	std::getline(std::cin, str);
+	std::getline(std::cin, str);
+	std::stringstream ss;
+	int dd, mm, yy;
+	ss << str;
+	ss >> dd;
+	ss.seekg(3);
+	ss >> mm;
+	ss.seekg(6);
+	ss >> yy;
+	date data = date(dd, mm, yy);
+	std::list<Reader> check;
+	for (auto iter = list1.begin(); iter != list1.end(); iter++)
+	{	
+		for (auto iter1 = iter->list.begin(); iter1 != iter->list.end(); iter1++)
+			if (iter1->check_reader(data))
+				check.push_back(*iter1);
+			
+	}
+	for (auto iter = check.begin(); iter != check.end(); iter++)
+	{
+		iter->print_fullinfo();
+	}
+}
 
 void Library::print_library_books()
 {
@@ -148,26 +293,31 @@ int main()
 			Library.add_book_to_library();
 			break;
 		case 4:
+			Library.remove_book_from_library();
 			break;
 		case 5:
-			//list.print();
-			break;
-		case 6:
 			Library.print_books();
 			break;
-		case 7:
+		case 6:
 			Library.print_library_books();
 			break;
+		case 7:
+			Library.add_reader();
+			break;
 		case 8:
+			Library.remove_reader();
 			break;
 		case 9:
+			Library.find_book_by_id();
 			break;
 		case 10:
-			break;
-		case 11:
 			Library.find_book_by_name();
 			break;
+		case 11:
+			Library.find_books_by_author();
+			break;
 		case 12:
+			Library.check_readers();
 			break;
 		};
 		if (exit == true) break;

@@ -14,7 +14,6 @@ public:
 	void add_reader(const Reader& a);
 	void remove_reader(std::string name);
 	void print_fullinfo();
-
 	LibraryBook();
 	LibraryBook(const Book& a, int total_count, int avilable_book_count);
 };
